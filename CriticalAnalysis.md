@@ -31,6 +31,10 @@ User Story 7:
 
 User could review history order.
 
+User Sotry 8:
+
+User could do a online chat on this website.
+
 ### AWS Service 
 #### AWS SNS
 We could use this service to push notification for order confirmation to customer/seller email address.
