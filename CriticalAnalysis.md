@@ -17,7 +17,7 @@ User add items to shopping cart (saved in account)
 
 User Story 4:
 
-User could checkout the cart, pay for order.
+User could checkout the cart, pay for order (PayPal API).
 
 User Story 5:
 
