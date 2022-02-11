@@ -46,3 +46,10 @@ We could use this as our online database, for order information storage
 Use this for back-end code.
 #### AWS Lambda
 Use this for some service to build a serverless back-end
+
+### Delivery Model
+The website contain two parts. The front-end provides user interaction interface and may use framework REACT. It will use AWS Elastic Beanstalk and it will be a PaaS model. It takes the application code and deploys it on its own OS and supporting computing resource.
+
+And the back-end service will use AWS Lambda to build a service to manage order information and other data. It will be a FaaS Model since we only need to write business logic and then executed in a container of cloud provider.
+### Deployment Model
+Since our website, application, service mainly use AWS computing resource. So we use the Public Clouds deployment model.
