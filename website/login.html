@@ -27,9 +27,9 @@
 
 
 
-			<input id="regUserName" type="text" placeholder="Username" required='required'  title="Letters and Digits Only"/>
+			<input id="regUserName" type="text" placeholder="Username" required='required'  title="Letters and Digits Only" pattern="[\da-zA-Z]+"/>
 			<input id="regEmail" type="email" placeholder="Email" required='required'/>
-			<input id="regPassword" type="password" placeholder="Password" required='required' title="Letters and Digits Only" pattern="[\da-zA-Z]+" />
+			<input id="regPassword" type="password" placeholder="Password" required='required' title="Minimum Length is 8. Letters Combined with Digits" pattern="[\da-zA-Z]+" />
 			<button onclick="register()">Sign Up</button>
 		</form>
 	</div>
@@ -62,98 +62,8 @@
 </div>
 <!-- partial -->
 
-<script src="js/script.js"></script>
-<script>
+<script src="js/loginscript.js"></script>
 
-	var username;
-	var password;
-	var email;
-	var poolData;
-
-	function cleanPage(){
-		document.getElementById("loginPassword").value="";
-		document.getElementById("loginUsername").value="";
-		document.getElementById("response").innerText="";
-	}
-
-
-	function register(){
-
-
-		username=document.getElementById("regUserName").value;
-		password=document.getElementById("regPassword").value;
-		email=document.getElementById("regEmail").value;
-		poolData={
-			UserPoolId: _config.cognito.userPoolId,//AWS Cognito Userpool ID
-			ClientId: _config.cognito.clientId,
-		};
-		var userPool=new AmazonCognitoIdentity.CognitoUserPool(poolData);
-		var attributeList=[];
-		var dataEmail={
-			Name:'email',
-			Value:email,
-		};
-		var attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
-		attributeList.push(attributeEmail)
-		userPool.signUp(username,password,attributeList,null, function(err,result){
-			if (err){
-				alert(err.message || JSON.stringify(err));
-				return;
-			}
-			var cognitoUser=result.user;
-			console.log('Register Successful. User name is :'+cognitoUser.getUsername());
-			//change response
-			document.getElementById("regUserName").value = "";
-			document.getElementById("regPassword").value= "";
-			document.getElementById("regEmail").value= "";
-			document.getElementById("signIn").click()
-			document.getElementById("response").style.visibility="visible"
-			document.getElementById("response").innerText = "Sign Up Successfully. Please Verify Account in Email"
-		});
-	}
-
-	function login() {
-
-		var authenticationData = {
-			Username : document.getElementById("loginUsername").value,
-			Password : document.getElementById("loginPassword").value,
-		};
-
-		var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
-
-		var poolData = {
-			UserPoolId : _config.cognito.userPoolId, // Your user pool id here
-			ClientId : _config.cognito.clientId, // Your client id here
-		};
-
-		var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
-
-		var userData = {
-			Username : document.getElementById("loginUsername").value,
-			Pool : userPool,
-		};
-
-		var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
-
-		cognitoUser.authenticateUser(authenticationDetails, {
-			onSuccess: function (result) {
-				var accessToken = result.getAccessToken().getJwtToken();
-				console.log(accessToken);
-				window.location.replace("main.html");
-
-			},
-
-			onFailure: function(err) {
-				document.getElementById("response").style.visibility="visible"
-				document.getElementById("response").innerText = "Error: "+err.message || JSON.stringify(err);
-
-			},
-		});
-	}
-
-
-
-</script>
 
 </body>
 </html>
