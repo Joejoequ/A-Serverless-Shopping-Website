@@ -1,0 +1,159 @@
+<!-- Copyright (c) 2022 by RH2O (https://codepen.io/Rh2o/pen/yLgxJoG) -->
+<!-- License is in folder, some changes from original version -->
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+
+	<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<script src="js/amazon-cognito-auth.min.js"></script>
+	<script src="https://sdk.amazonaws.com/js/aws-sdk-2.7.16.min.js"></script>
+	<script src="js/amazon-cognito-identity.min.js"></script>
+	<script src="js/config.js"></script>
+
+
+
+  <title>Login | Deep Sleeping</title>
+	<link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<h2>Deep Sleeping Online Shopping</h2>
+<div class="container" id="container">
+	<div class="form-container sign-up-container">
+		<form action="#">
+			<h1>Create Account</h1>
+
+
+
+			<input id="regUserName" type="text" placeholder="Username" required='required'  title="Letters and Digits Only"/>
+			<input id="regEmail" type="email" placeholder="Email" required='required'/>
+			<input id="regPassword" type="password" placeholder="Password" required='required' title="Letters and Digits Only" pattern="[\da-zA-Z]+" />
+			<button onclick="register()">Sign Up</button>
+		</form>
+	</div>
+	<div class="form-container sign-in-container">
+		<form action="#">
+			<h1>Sign in</h1>
+
+
+			<p id="response">Response</p>
+			<input id="loginUsername" type="text" placeholder="Username" required='required' pattern="[\da-zA-Z]+" />
+			<input id="loginPassword" type="password" placeholder="Password" required='required' pattern="[\da-zA-Z]+" />
+			<a href="#">Forgot your password?</a>
+			<button onclick="login()">Sign In</button>
+		</form>
+	</div>
+	<div class="overlay-container">
+		<div class="overlay">
+			<div class="overlay-panel overlay-left">
+				<h1>Welcome Back!</h1>
+				<p>To keep connected with us please login with your personal info</p>
+				<button class="ghost" id="signIn">Sign In</button>
+			</div>
+			<div class="overlay-panel overlay-right">
+				<h1>Hello, Friend!</h1>
+				<p>Enter your personal details and start journey with us</p>
+				<button class="ghost" id="signUp"  onclick="cleanPage()">Sign Up</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- partial -->
+
+<script src="js/script.js"></script>
+<script>
+
+	var username;
+	var password;
+	var email;
+	var poolData;
+
+	function cleanPage(){
+		document.getElementById("loginPassword").value="";
+		document.getElementById("loginUsername").value="";
+		document.getElementById("response").innerText="";
+	}
+
+
+	function register(){
+
+
+		username=document.getElementById("regUserName").value;
+		password=document.getElementById("regPassword").value;
+		email=document.getElementById("regEmail").value;
+		poolData={
+			UserPoolId: _config.cognito.userPoolId,//AWS Cognito Userpool ID
+			ClientId: _config.cognito.clientId,
+		};
+		var userPool=new AmazonCognitoIdentity.CognitoUserPool(poolData);
+		var attributeList=[];
+		var dataEmail={
+			Name:'email',
+			Value:email,
+		};
+		var attributeEmail = new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
+		attributeList.push(attributeEmail)
+		userPool.signUp(username,password,attributeList,null, function(err,result){
+			if (err){
+				alert(err.message || JSON.stringify(err));
+				return;
+			}
+			var cognitoUser=result.user;
+			console.log('Register Successful. User name is :'+cognitoUser.getUsername());
+			//change response
+			document.getElementById("regUserName").value = "";
+			document.getElementById("regPassword").value= "";
+			document.getElementById("regEmail").value= "";
+			document.getElementById("signIn").click()
+			document.getElementById("response").style.visibility="visible"
+			document.getElementById("response").innerText = "Sign Up Successfully. Please Verify Account in Email"
+		});
+	}
+
+	function login() {
+
+		var authenticationData = {
+			Username : document.getElementById("loginUsername").value,
+			Password : document.getElementById("loginPassword").value,
+		};
+
+		var authenticationDetails = new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
+
+		var poolData = {
+			UserPoolId : _config.cognito.userPoolId, // Your user pool id here
+			ClientId : _config.cognito.clientId, // Your client id here
+		};
+
+		var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+
+		var userData = {
+			Username : document.getElementById("loginUsername").value,
+			Pool : userPool,
+		};
+
+		var cognitoUser = new AmazonCognitoIdentity.CognitoUser(userData);
+
+		cognitoUser.authenticateUser(authenticationDetails, {
+			onSuccess: function (result) {
+				var accessToken = result.getAccessToken().getJwtToken();
+				console.log(accessToken);
+				window.location.replace("main.html");
+
+			},
+
+			onFailure: function(err) {
+				document.getElementById("response").style.visibility="visible"
+				document.getElementById("response").innerText = "Error: "+err.message || JSON.stringify(err);
+
+			},
+		});
+	}
+
+
+
+</script>
+
+</body>
+</html>
