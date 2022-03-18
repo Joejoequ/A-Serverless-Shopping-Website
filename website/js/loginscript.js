@@ -126,6 +126,7 @@ function login() {
 
     cognitoUser.authenticateUser(authenticationDetails, {
         onSuccess: function (result) {
+            
             var accessToken = result.getAccessToken().getJwtToken();
             console.log(accessToken);
 
