@@ -130,7 +130,7 @@ function login() {
             var accessToken = result.getAccessToken().getJwtToken();
             console.log(accessToken);
 
-            window.location.replace("index.html");
+            window.location.replace("account.html");
 
         },
 

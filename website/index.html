@@ -1,75 +1,80 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" >
 <head>
-    <meta charset="utf-8">
-    <!--Cognito JavaScript-->
-    <script src="js/amazon-cognito-identity.min.js"></script>
-    <script src="js/config.js"></script>
+  <meta charset="UTF-8">
+  <script src="js/amazon-cognito-identity.min.js"></script>
+  <script src="js/config.js"></script>
+  <title>DeepSleeping Shopping Website</title>
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'><link rel="stylesheet" href="index_style.css">
+
 </head>
-
 <body>
-<div class="container">
-    <div>
-        <h2>User Profile</h2>
-        <button type="button" onclick="signOut()">Sign out</button>
-    </div>
+<div class="main-wrapper">
+  <div class="header">
+    <h1>DeepSleeping Online Shopping</h1>
 
-    <div>
+    <a id="loginlink" href="login.html">
+      <button id="loginbtn" class="btn">Sign In</button>
+    </a>
 
-        <h4>Personal Information</h4>
-        <a href="login.html">login page</a>
+    <a href="account.html">
+      <button id="accountbtn" class="btn">Account</button>
+    </a></div>
 
-        <br>
-        <div>
-            <label>Email <span>(Username)</span></label>
-        </div>
-        <div>
-            <label id="email_value"></label>
-            <label id="username"></label>
-        </div>
-    </div>
-    </div>
+  <div id="vue">
+    <notifications :notification-data="notificationData"></notifications>
+    <cart :cart="cart" :cart-sub-total="cartSubTotal" :tax="tax" :cart-total="cartTotal" :checkout-bool="checkoutBool"></cart>
+    <products :cart="cart" :cart-sub-total="cartSubTotal" :tax="tax" :cart-total="cartTotal" :products-data="productsData"></products>
+    <checkout-area v-if="checkoutBool" :cart="cart" :tax="tax" :cart-sub-total="cartSubTotal" :cart-total="cartTotal" :products-data="productsData" :total-with-tax="totalWithTax"></checkout-area>
+  </div>
+</div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.11/vue.js'></script>
+<script  src="./script.js"></script>
 
-    <script>
-        var data = {
-            UserPoolId : _config.cognito.userPoolId,
-            ClientId : _config.cognito.clientId
-        };
-        var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
-        var cognitoUser = userPool.getCurrentUser();
+<script>
+  var data = {
+    UserPoolId : _config.cognito.userPoolId,
+    ClientId : _config.cognito.clientId
+  };
+  var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+  var cognitoUser = userPool.getCurrentUser();
 
-        window.onload = function(){
-            if (cognitoUser != null) {
-                cognitoUser.getSession(function(err, session) {
-                    if (err) {
-                        alert(err);
-                        return;
-                    }
-                    console.log('session validity: ' + session.isValid());
-                    //Set the profile info
-                    cognitoUser.getUserAttributes(function(err, result) {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        }
-                        console.log(result);
-                        document.getElementById("email_value").innerText = result[2].getValue();
-                        document.getElementById("username").innerText = cognitoUser['username'];
-                    });
-
-                });
-            }
-
+  window.onload = function(){
+    if (cognitoUser != null) {
+      cognitoUser.getSession(function(err, session) {
+        if (err) {
+          alert(err);
+          return;
         }
+        console.log('session validity: ' + session.isValid());
+        //Set the profile info
+        cognitoUser.getUserAttributes(function(err, result) {
+          if (err) {
+            console.log(err);
+            return;
+          }
+          console.log(result);
+          document.getElementById("loginbtn").innerText = 'Logout';
+          document.getElementById("loginlink").href = "";
+          document.getElementById("loginbtn").onclick=signOut;
 
-        function signOut(){
-            if (cognitoUser != null) {
-                cognitoUser.signOut();
-                window.location.replace("login.html");
 
-            }
+        });
 
-        }
-    </script>
+      });
+    }
+
+  }
+
+  function signOut(){
+    if (cognitoUser != null) {
+      cognitoUser.signOut();
+      window.location.reload();
+
+    }
+
+  }
+</script>
 </body>
 </html>
