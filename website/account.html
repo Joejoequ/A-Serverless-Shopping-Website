@@ -5,72 +5,96 @@
     <!--Cognito JavaScript-->
     <script src="js/amazon-cognito-identity.min.js"></script>
     <script src="js/config.js"></script>
+    <title>Account-DeepSleeping Shopping Website</title>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css'><link rel="stylesheet" href="account_style.css">
 </head>
 
 <body>
-<div class="container">
-    <div>
-        <h2>User Profile</h2>
-        <button type="button" onclick="signOut()">Sign out</button>
-    </div>
+<div class="main-wrapper">
+    <div class="header">
+        <h1>DeepSleeping Online Shopping</h1>
+        <a id="indexlink" href="index.html">
+            <button id="indexbtn" class="btn">Main</button>
+        </a>
+
+        <a >
+            <button id="signoutbtn" onclick="signOut()" class="btn">Sign Out</button>
+        </a></div>
+       </div>
 
     <div>
-
-        <h4>Personal Information</h4>
-        <a href="login.html">login page</a>
-        <a href="index.html">product page</a>
-
-        <br>
-        <div>
-            <label>Email <span>(Username)</span></label>
-        </div>
-        <div>
+        <h2 class="section">User Profile</h2>
+        <div class="userInfo">
+            <div id="user_email">
+            <label>email:</label>
             <label id="email_value"></label>
+                </div>
+
+            <div id="user_username">
+            <label>username:</label>
             <label id="username"></label>
+            </div>
         </div>
-    </div>
+        <br><br><br><br>
+        <h2 class="section">History Orders</h2>
+
+
+        <!--Order Diplay Here-->
+        
     </div>
 
-    <script>
-        var data = {
-            UserPoolId : _config.cognito.userPoolId,
-            ClientId : _config.cognito.clientId
-        };
-        var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
-        var cognitoUser = userPool.getCurrentUser();
+    <div>
 
-        window.onload = function(){
-            if (cognitoUser != null) {
-                cognitoUser.getSession(function(err, session) {
+
+
+
+
+
+
+    </div>
+</div>
+
+<script>
+    var data = {
+        UserPoolId: _config.cognito.userPoolId,
+        ClientId: _config.cognito.clientId
+    };
+    var userPool = new AmazonCognitoIdentity.CognitoUserPool(data);
+    var cognitoUser = userPool.getCurrentUser();
+
+    window.onload = function () {
+        if (cognitoUser != null) {
+            cognitoUser.getSession(function (err, session) {
+                if (err) {
+                    alert(err);
+                    return;
+                }
+                console.log('session validity: ' + session.isValid());
+                //Set the profile info
+                cognitoUser.getUserAttributes(function (err, result) {
                     if (err) {
-                        alert(err);
+                        console.log(err);
                         return;
                     }
-                    console.log('session validity: ' + session.isValid());
-                    //Set the profile info
-                    cognitoUser.getUserAttributes(function(err, result) {
-                        if (err) {
-                            console.log(err);
-                            return;
-                        }
-                        console.log(result);
-                        document.getElementById("email_value").innerText = result[2].getValue();
-                        document.getElementById("username").innerText = cognitoUser['username'];
-                    });
-
+                    console.log(result);
+                    document.getElementById("email_value").innerText = result[2].getValue();
+                    document.getElementById("username").innerText = cognitoUser['username'];
+                    document.getElementById("signoutbtn").style.display=inline;
                 });
-            }
 
+            });
         }
 
-        function signOut(){
-            if (cognitoUser != null) {
-                cognitoUser.signOut();
-                window.location.replace("login.html");
+    }
 
-            }
+    function signOut() {
+        if (cognitoUser != null) {
+            cognitoUser.signOut();
+
 
         }
-    </script>
+        window.location.replace("index.html");
+    }
+</script>
 </body>
 </html>
