@@ -533,11 +533,13 @@ label {
 }
 
 #loginbtn{
+  width: 8%;
   position: relative;
   left: 15px;
   top: 5px;
 }
 #accountbtn{
+  width: 8%;
   position: relative;
   left: 30px;
   top: 5px;

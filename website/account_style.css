@@ -175,11 +175,13 @@ label {
 }
 
 #indexbtn{
+    width: 10%;
     position: relative;
     left: 15px;
     top: 5px;
 }
 #signoutbtn{
+    width: 10%;
     position: relative;
     left: 30px;
     top: 5px;

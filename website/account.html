@@ -13,12 +13,13 @@
 <div class="main-wrapper">
     <div class="header">
         <h1>DeepSleeping Online Shopping</h1>
+
         <a id="indexlink" href="index.html">
             <button id="indexbtn" class="btn">Main</button>
         </a>
 
         <a >
-            <button id="signoutbtn" onclick="signOut()" class="btn">Sign Out</button>
+            <button id="signoutbtn" onclick="signOut()" class="btn">Log Out</button>
         </a></div>
        </div>
 
@@ -40,7 +41,7 @@
 
 
         <!--Order Diplay Here-->
-        
+
     </div>
 
     <div>
@@ -79,7 +80,7 @@
                     console.log(result);
                     document.getElementById("email_value").innerText = result[2].getValue();
                     document.getElementById("username").innerText = cognitoUser['username'];
-                    document.getElementById("signoutbtn").style.display=inline;
+                    document.getElementById("signoutbtn").style.display="inline";
                 });
 
             });
