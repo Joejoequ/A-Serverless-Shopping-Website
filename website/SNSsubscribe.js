@@ -13,11 +13,11 @@ function snsSubscribe(emailAddress){
 var params = {
   Protocol: 'EMAIL', /* required */
   TopicArn: 'arn:aws:sns:us-east-1:312385302615:4145', /* required */
-  Endpoint: 'emailAddress'
+  Endpoint: emailAddress
 };
 
 // Create promise and SNS service object
-var subscribePromise = new AWS.SNS({apiVersion: '2010-03-31'}).subscribe(params).promise();
+var subscribePromise = new AWS.SNS().subscribe(params).promise();
 
 // Handle promise's fulfilled/rejected states
 subscribePromise.then(
