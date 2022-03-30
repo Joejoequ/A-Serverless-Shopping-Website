@@ -1,5 +1,3 @@
-
-    
 import uuid
 import json
 import boto3
@@ -74,9 +72,30 @@ def lambda_handler(event, context):
     }
     )
     
-  
+    message="user_id: "+userID+ "\norder_id: "+orderID+"\nAmount: "+amount+"\n Items: \n"
     
+    for item in checkout_list:
+        message+="SKU: "+item["SKU"]+"   "+"Quantity: "+item["Quantity"]+"\n"
+        
+    
+    
+    encoded_body = json.dumps({
+        "subject": "New Order Received ",
+        "message": message
+    })
+
+    
+    http = urllib3.PoolManager()
+    resp = http.request(
+    "POST",
+    "https://euxnk1oay8.execute-api.us-east-1.amazonaws.com/SNSpublish",
+     headers={'Content-Type': 'application/json'},
+                 body=encoded_body 
+)
+    
+
+    resp_body = resp.data.decode('utf-8')
     return {
         'statusCode': 200,
-        'body': 'Order Created Successfully'
+        'body': 'Order Created Successfully '+resp_body 
     }
