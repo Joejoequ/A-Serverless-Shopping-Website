@@ -70,7 +70,11 @@ def lambda_handler(event, context):
     
     return {
         'statusCode': 200,
-        'body': 'Item Added Successfully'
+        'body': 'Item Added Successfully',
+        'headers':{
+            "Access-Control-Allow-Origin": "*"
+        }
     }
+
     
 

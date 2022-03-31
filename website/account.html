@@ -38,7 +38,31 @@
         </div>
         <br><br><br><br>
         <h2 class="section">History Orders</h2>
+        <section>
+            <!--for demo wrap-->
 
+            <div class="tbl-header">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Item</th>
+
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tbl-content">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody id="tablecontent">
+
+
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
         <!--Order Diplay Here-->
 
@@ -56,6 +80,8 @@
 </div>
 
 <script>
+
+
     var data = {
         UserPoolId: _config.cognito.userPoolId,
         ClientId: _config.cognito.clientId
@@ -81,6 +107,42 @@
                     document.getElementById("email_value").innerText = result[2].getValue();
                     document.getElementById("username").innerText = cognitoUser['username'];
                     document.getElementById("signoutbtn").style.display="inline";
+
+                    var obj = { "user_id": result[0].getValue()};
+                    var httpRequest = new XMLHttpRequest();
+
+                    httpRequest.open('POST', 'https://9sczce8nsh.execute-api.us-east-1.amazonaws.com/getUserOrders', true);
+
+                    httpRequest.send(JSON.stringify(obj));
+
+                    httpRequest.onload = function () {
+                        console.log(this.responseText);
+                        var json = JSON.parse(this.responseText);
+                        var ordersList=json["orders"];
+                        for (let i = 0; i < ordersList.length; i++) {
+                            var order=ordersList[i];
+                            var order_id=order["order_id"];
+                            var amount=order["amount"];
+                            var status=order["status"];
+
+                            var checkoutList=order["checkout_list"]
+
+                            var checkoutStr="";
+
+                            for (let j=0; j<checkoutList.length;j++){
+                                checkoutStr+="SKU: "+checkoutList[j]["SKU"]+"&nbsp&nbsp&nbsp&nbsp"+"Quantity: "+checkoutList[j]["Quantity"]+"<br>";
+                            }
+                            document.getElementById("tablecontent").innerHTML+="<tr>" +
+                                "<td>"+order_id+"</td>"+"<td> $"+amount+ "</td>" +
+                                "<td>" +status+"</td>" +
+                                "<td>"+checkoutStr+"</td>" +
+                                "</tr>";
+                        }
+
+
+                    };
+
+
                 });
 
             });
@@ -96,6 +158,11 @@
         }
         window.location.replace("index.html");
     }
+
+    $(window).on("load resize ", function() {
+        var scrollWidth = $('.tbl-content').width() - $('.tbl-content table').width();
+        $('.tbl-header').css({'padding-right':scrollWidth});
+    }).resize();
 </script>
 </body>
 </html>

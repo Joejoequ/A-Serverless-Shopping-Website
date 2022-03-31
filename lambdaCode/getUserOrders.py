@@ -1,5 +1,3 @@
-
-    
 import uuid
 import json
 import boto3
@@ -40,9 +38,13 @@ def lambda_handler(event, context):
     KeyConditionExpression=Key('user_id').eq(userID)
 )
 
-  
+    feedback={"orders":response['Items']}
+    
     
     return {
         'statusCode': 200,
-        'body': str(response['Items'])
+        'body': json.dumps(feedback),
+        'headers':{
+            "Access-Control-Allow-Origin": "*"
+        }
     }

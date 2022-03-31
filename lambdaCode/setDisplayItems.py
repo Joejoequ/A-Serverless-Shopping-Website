@@ -38,5 +38,8 @@ def lambda_handler(event, context):
     # TODO implement
     return {
         'statusCode': 200,
-        'body': 'Display Items Saved in Dynamo Successfully!'
+        'body': 'Display Items Saved in Dynamo Successfully!',
+        'headers':{
+            "Access-Control-Allow-Origin": "*"
+        }
     }

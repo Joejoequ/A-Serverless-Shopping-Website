@@ -97,5 +97,8 @@ def lambda_handler(event, context):
     resp_body = resp.data.decode('utf-8')
     return {
         'statusCode': 200,
-        'body': 'Order Created Successfully '+resp_body 
+        'body': 'Order Created Successfully '+resp_body ,
+        'headers':{
+            "Access-Control-Allow-Origin": "*"
+        }
     }
