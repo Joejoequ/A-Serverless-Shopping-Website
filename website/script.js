@@ -458,7 +458,7 @@ Vue.component('checkout-area', {
 
 
       var self = this;
-      var amount = self.cartTotal.toString()
+      var amount = self.cartTotal.toFixed(2).toString()
       self.showModal = true;
 
       var obj = {
