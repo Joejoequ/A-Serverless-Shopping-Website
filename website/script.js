@@ -453,12 +453,48 @@ Vue.component('checkout-area', {
       }
     },
 
+
     checkoutModal: function() {
+
+
       var self = this;
+      var amount = self.cartTotal.toString()
       self.showModal = true;
 
-      console.log("CHECKOUT", self.cartTotal);
+      var obj = {
 
+        "user_id": String(user_id),
+
+        "status": "Received",
+
+        "amount": amount,
+
+        "checkout_list": []
+
+      } ;
+
+      for (var i = 0; i < vue.cart.length; i++){
+
+        var str_sku = vue.cart[i].SKU.toString();
+        var str_quan = vue.cart[i].quantity.toString();
+        var temp_item = {
+          "SKU": str_sku,
+
+          "Quantity": str_quan
+        }
+
+        obj["checkout_list"].push(temp_item);
+      }
+
+      var httpRequest = new XMLHttpRequest();
+      httpRequest.open('POST', 'https://9sczce8nsh.execute-api.us-east-1.amazonaws.com/createOrder', true);
+
+      httpRequest.send(JSON.stringify(obj));
+
+      httpRequest.onload = function () {};
+
+      console.log("CHECKOUT", self.cartTotal);
+      console.log(obj);
     },
 
     hideModal: function() {
